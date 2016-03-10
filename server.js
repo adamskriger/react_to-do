@@ -1,4 +1,6 @@
-'use strict'
+
+// 'use strict'
+require('dotenv').config()
 const express     = require('express');
 const logger      = require('morgan');
 const path        = require('path');
@@ -23,5 +25,5 @@ app.use('/tasks',taskRoutes);
 
 // turn me on!
 app.listen(PORT , ()=>
-  console.log(`server here! listening on`, PORT ) 
+  console.log(`server here! listening on`, PORT )
 )

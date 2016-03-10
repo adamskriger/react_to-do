@@ -7,19 +7,27 @@ const App = React.createClass({
   },
   componentDidMount:function() {
    // this is where you'll get the data from the 'db'
-   $.get('/tasks').done( (data)=>{
-      this.state.tasks=data;
+   $.get('/tasks').done( data=>{
+
+      data.forEach( el=> {
+        this.state.tasks[el.task_id] = el;
+      });
+
       this.setState({tasks:this.state.tasks})
     })
   },
   addTask:function( newTask ) {
-    // generate a new timestamp so that we have a unique id for each task
-    var timestamp = (new Date()).getTime();
+    console.log("insideaddTask event handler");
+    var updateData = (data)=>{
+      var newID = data.task_id;
+      // add new task to state
+      this.state.tasks[newID] = newTask;
+      this.setState({ tasks: this.state.tasks });
+      console.log("inside updatedata event handler");
+    }
 
-    // add new task to state
-    this.state.tasks['task-'+ timestamp] = newTask;
-
-    this.setState({ tasks: this.state.tasks });
+    $.post('/tasks', newTask)
+    .done(updateData);    
 
   },
   toggleTask:function(key){
@@ -91,7 +99,6 @@ const CreateTaskForm = React.createClass({
     event.preventDefault();
     var task = {
       name : this.refs.name.value,
-      completed:false,
       desc: this.refs.desc.value
     }
 
@@ -138,7 +145,7 @@ const Task = React.createClass({
     return (
       <li className="collection-item">
         <div>
-          <strong>{this.props.details.name}</strong> {this.props.details.desc}
+          <strong>{this.props.details.task_name}</strong> {this.props.details.task_desc}
           <a href="#" onClick={this.handleClick} className="secondary-content">
             <i className="material-icons">check</i>
           </a>

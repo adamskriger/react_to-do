@@ -7,8 +7,12 @@ const App = React.createClass({
   },
   componentDidMount:function() {
    // this is where you'll get the data from the 'db'
-   $.get('/tasks').done( (data)=>{
-      this.state.tasks=data;
+   $.get('/tasks').done( data=>{
+
+      data.forEach( el=> {
+        this.state.tasks[el.task_id] = el;
+      });
+
       this.setState({tasks:this.state.tasks})
     })
   },
@@ -141,7 +145,7 @@ const Task = React.createClass({
     return (
       <li className="collection-item">
         <div>
-          <strong>{this.props.details.name}</strong> {this.props.details.desc}
+          <strong>{this.props.details.task_name}</strong> {this.props.details.task_desc}
           <a href="#" onClick={this.handleClick} className="secondary-content">
             <i className="material-icons">check</i>
           </a>

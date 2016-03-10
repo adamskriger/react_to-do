@@ -27,12 +27,13 @@ function getTasks(req, res, next) {
 }
 
 function addTask(req, res, next) {
+  console.log('running addTask');
   db.one(`
     INSERT INTO 
     tasks (task_name, task_desc) 
     VALUES ($1, $2)
     returning task_id;`,
-        [ req.body.name , req.body.description ]
+        [ req.body.name , req.body.desc ]
     )
     .then((data)=>{
       console.log('ADDED TASK SUCCESSFUL');

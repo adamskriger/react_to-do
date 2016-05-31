@@ -1,21 +1,27 @@
-'use strict'
+// 'use strict'
 
 const App = React.createClass({
   getInitialState:function(){
     // overall application state
     return {tasks:{}}
   },
+
+
+
+
   componentDidMount:function() {
    // this is where you'll get the data from the 'db'
    $.get('/tasks').done( data=>{
 
       data.forEach( el=> {
-        this.state.tasks[el.task_id] = el;
       });
 
       this.setState({tasks:this.state.tasks})
     })
   },
+
+
+
   addTask:function( newTask ) {
     console.log("insideaddTask event handler");
     var updateData = (data)=>{
@@ -27,9 +33,11 @@ const App = React.createClass({
     }
 
     $.post('/tasks', newTask)
-    .done(updateData);    
+    .done(updateData);
 
   },
+
+
   toggleTask:function(key){
     this.state.tasks[key].completed = !this.state.tasks[key].completed;
     this.setState({tasks:this.state.tasks});
@@ -39,9 +47,18 @@ const App = React.createClass({
   filterComplete:function(key){
     return this.state.tasks[key].completed
   },
+
+
+
+
   filterNotComplete:function(key){
     return !this.filterComplete(key)
-  }, 
+  },
+
+
+
+
+
   renderTask:function(key){
     return (
       <Task key={key} index={key} details={this.state.tasks[key]} toggleTask={this.toggleTask} />
@@ -51,10 +68,10 @@ const App = React.createClass({
   render:function() {
     return (
       <div className="container">
-      
+
         <div className="row">
           <section className="col s12">
-          
+
             {/*to do unfinished tasks*/}
             <section id="todo-display" className="col s7">
               <ul className="collection with-header">
@@ -94,6 +111,9 @@ const App = React.createClass({
 
 });
 
+
+
+
 const CreateTaskForm = React.createClass({
   handleSubmit:function(event) {
     event.preventDefault();
@@ -104,7 +124,7 @@ const CreateTaskForm = React.createClass({
 
     // add the task to the state
     this.props.addTask(task);
-    
+
     // clear the form
     this.refs.taskForm.reset();
 
@@ -157,8 +177,3 @@ const Task = React.createClass({
 
 
 ReactDOM.render(<App />, document.querySelector('#container'))
-
-
-
-
-

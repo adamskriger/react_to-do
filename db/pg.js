@@ -1,6 +1,6 @@
 'use strict'
 var pg = require('pg-promise')({
-    // Initialization Options 
+    // Initialization Options
 });
 var config = {
     host: process.env.DB_HOST,
@@ -15,13 +15,19 @@ var db = pg(config);
 
 
 function getTasks(req, res, next) {
+
+
   db.any("SELECT * from tasks;")
+
+
     .then(function (data) {
       res.rows = data;
       next();
     })
+
+
     .catch(function (error) {
-        // error; 
+        // error;
       console.log('Error', error);
     });
 }
@@ -29,8 +35,8 @@ function getTasks(req, res, next) {
 function addTask(req, res, next) {
   console.log('running addTask');
   db.one(`
-    INSERT INTO 
-    tasks (task_name, task_desc) 
+    INSERT INTO
+    tasks (task_name, task_desc)
     VALUES ($1, $2)
     returning task_id;`,
         [ req.body.name , req.body.desc ]
@@ -47,8 +53,8 @@ function addTask(req, res, next) {
 
 function toggleTask(req, res, next) {
   db.none(`
-    UPDATE tasks 
-    SET completed = NOT completed 
+    UPDATE tasks
+    SET completed = NOT completed
     WHERE task_id = ($1);`,
           [ req.params.taskid ]
     )
@@ -63,10 +69,10 @@ function toggleTask(req, res, next) {
 
 function updateTime(req, res, next) {
   db.none(`
-      UPDATE tasks 
-      SET 
+      UPDATE tasks
+      SET
         task_time_start = ($1),
-        task_time_end = ($2) 
+        task_time_end = ($2)
       WHERE task_id = ($3);`,
         [ req.body.start_time, req.body.end_time , req.params.taskid ] )
   .then(()=>{
@@ -80,7 +86,7 @@ function updateTime(req, res, next) {
 
 function deleteTask(req, res, next) {
   db.none(`
-    DELETE FROM 
+    DELETE FROM
     tasks WHERE task_id = ($1);`,
           [ req.params.taskid ])
     .then(()=>{
